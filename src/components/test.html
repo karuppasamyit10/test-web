@@ -1,0 +1,152 @@
+<div class="users-panel">
+    <div class="video-logo" ng-click="meetingService.userSelfAdding && leaveModal()">
+        <img src="../../../webrtc/images/connect-logo.svg" alt="" />
+    </div>
+    <div class="controllers" ng-show="!meetingService.showErrorPage">
+        <ul ng-repeat="meetingUser in meetingService.meetingUserList.slice() track by $index " ng-cloak>
+            <li
+                ng-click="meetingService.modalOpen==0 && meetingUser.meetingUserId==meetingService.meetingUserId && updateSelectedUserId(meetingService.meetingUserId)">
+                <p data-toggle="tooltip" data-placement="left"
+                    title="{{meetingUser.meetingUserId==meetingService.meetingUserId?meetingService.meetingOwnUserName:meetingUser.meetingUserName}}">
+                    <b>
+                        {/*
+                        {{ meetingUser.meetingUserId==meetingService.meetingUserId?meetingService.meetingOwnUserName.charAt(0):meetingUser.meetingUserName.charAt(0) | uppercase}}
+                        */}
+                    </b></p>
+            </li>
+        </ul>
+        <ul
+            ng-show="meetingService.meetingUserList.length>=1 && meetingService.isVideoLoaded && meetingService.connection.peers.getAllParticipants().length<3">
+            <li>
+                <p data-toggle="tooltip" data-placement="right"
+                    data-original-title="{{3-meetingService.connection.peers.getAllParticipants().length}} remaining people can join this room"
+                    style={{fontSize: '15px'}}>
+                    {/* <b>{{3-meetingService.connection.peers.getAllParticipants().length}}</b> */}
+                    <i class="fa fa-user-plus" aria-hidden="true" style={{fontSize: '11px', color: '#28a745'}}></i></p>
+            </li>
+        </ul>
+        <ul ng-show="!meetingService.showErrorPage && meetingService.roomUrlSharing && meetingService.isVideoLoaded"
+            ngclipboard data-clipboard-text="{{app.hostName}}/#/{{meetingService.roomName}}"
+            ng-click="meetingService.copyToClipboard2()" data-toggle="tooltip" data-placement="right"
+            title="Click to share link" id="copyToClipboard2">
+            <li style={{backgroundColor: 'rgba(63, 228, 173, 0.61)', border: '1px solid rgba(255, 255, 255, 0.9)'}}>
+                <span><i class="fas fa-share-alt"></i></span>
+            </li>
+        </ul>
+    </div>
+    <div class="controllers" ng-show="!meetingService.showErrorPage">
+        <ul>
+            <li id="share-screen" ng-disabled="meetingService.actionEnable" ng-hide="meetingService.screenShared"
+                data-toggle="tooltip" data-placement="right" title="Screen Sharing">
+                <i class="fas fa-desktop"></i>
+            </li>
+            <li id="chat" ng-disabled="meetingService.actionEnable"
+                ng-click="meetingService.openChatPanel(meetingService.chatPanelOpened)" data-toggle="tooltip"
+                data-placement="right" title="chat" class="open-chat">
+                <i class="far fa-comments"><span class="badge" style={{color:'red'}}>
+                        {/* {{meetingService.unReadMsgCount}} */}
+                    </span></i>
+            </li>
+            <li id="start-recording" ng-disabled="!meetingService.userSelfAdding" data-toggle="tooltip"
+                data-placement="right" title="start recording">
+                <i class="far fa-play-circle" style={{color: 'green'}}></i>
+            </li>
+            <li id="stop-recording" ng-disabled="!meetingService.userSelfAdding" data-toggle="tooltip"
+                data-placement="right" title="stop recording">
+                <i class="far fa-stop-circle" style={{color: 'red'}}></i>
+            </li>
+            <li id="show-video" ng-disabled="meetingService.actionEnable" data-toggle="tooltip" data-placement="right"
+                title="video on" data-ng-click="meetingService.showVideo()">
+                <i class="far fa-video-slash" style={{color: 'red'}}></i>
+            </li>
+            <li id="hide-video" data-toggle="tooltip" data-placement="right" title="video off"
+                data-ng-click="meetingService.actionEnable && meetingService.hideVideo()">
+                <i class="far fa-video" style={{color: 'green'}}></i>
+            </li>
+            <li id="unmute" ng-disabled="!meetingService.userSelfAdding" data-toggle="tooltip" data-placement="right"
+                title="unmute" data-ng-click="meetingService.unmute()">
+                <i class="far fa-microphone-slash" style={{color: 'red'}}></i>
+            </li>
+            <li id="mute" ng-disabled="!meetingService.userSelfAdding" data-toggle="tooltip" data-placement="right"
+                title="mute" data-ng-click="meetingService.actionEnable && meetingService.mute()">
+                <i class="far fa-microphone" style={{color: 'green'}}></i>
+            </li>
+            <li id="end-call" data-toggle="tooltip" data-placement="right" title="end call"
+                ng-show="meetingService.isInitiator && meetingService.callStarted && meetingService.privateMeetingRoom && meetingService.createdBy">
+                <i class="far fa-phone-slash" aria-hidden="true" style={{color: 'red'}} data-toggle="modal"
+                    data-target="#endConfirmModal"></i>
+            </li>
+            <li id="leave-call" ng-disabled="!meetingService.userSelfAdding" data-toggle="tooltip"
+                data-placement="right" title="leave room"
+                data-ng-click="meetingService.userSelfAdding && meetingService.actionEnable && leaveModal()"
+                ng-show=" !meetingService.createdBy">
+                <i class="far fa-hand-point-left" aria-hidden="true" style={{color: 'red'}}></i>
+            </li>
+            <li id="join-call" ng-disabled="!meetingService.userSelfAdding" data-toggle="tooltip" data-placement="right"
+                title="join room" data-ng-click="meetingService.joinRoom()" ng-show="meetingService.showJoinRoomIcon">
+                <i class="far fa-hand-point-right" aria-hidden="true" style={{color: 'green'}}></i>
+            </li>
+            <li id="dasboard" ng-disabled="!meetingService.userSelfAdding" data-toggle="tooltip" data-placement="right"
+                title="go to dasboard" data-ng-click="meetingService.gotToDashboard()">
+                <i class="far fa-home" aria-hidden="true" style={{color: 'green'}}></i>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- Main-panel -->
+<div class="main-panel" ng-show="!meetingService.showErrorPage">
+    <div class="video-area">
+        <div class="video-main" id="main-video">
+            <div class="video-panel" ng-show="meetingService.userSelfAdding" id="videos-container-me">
+            </div>
+            <div class="loading-my-cam" ng-hide="meetingService.userSelfAdding">
+                <img src="../images/loading.gif" alt="" />
+                <h3 style={{alignItems: 'center'}}>Loading your camera...</h3>
+            </div>
+        </div>
+        <div class="sub-videos" id="videos-container-you">
+            <div class="video-panel video-loading"
+                ng-show="meetingService.connection.peers.getAllParticipants().length>0 && meetingService.newUserAdding"
+                id="newUserAdding">
+                <h3 ng-if="meetingService.addingUserName!=''">
+                    {/* {{meetingService.addingUserName}} */}
+                </h3>
+                <h3 ng-if="meetingService.addingUserName==''">Getting partners video. Please wait...</h3>
+            </div>
+            <div class="video-panel" ng-show="!meetingService.roomUrlSharing" id="sharingUrlShow">
+                <h1>Invite to start a meeting</h1>
+                <input id="copyToClipboard1" class="form-control" ng-click="meetingService.copyToClipboard1()"
+                    value="{{app.hostName}}/#/{{meetingService.roomName}}" readonly />
+                <button style={{width: '100%'}} class="btn btn-success"
+                    ng-click="meetingService.copyToClipboard1()">Copy link</button>
+            </div>
+            <div class="video-panel" ng-show="meetingService.presenterNotPresent" id="presenterNotPresent">
+                <div class="thank-you-message jstest-message">
+                    <h1 class="body">Presenter not present the room</h1>
+                </div>
+                <p>
+                    <button class="btn btn-primary" data-ui-sref="login"
+                        class="ui-button large primary-color jstest-return-button">Signup</button>
+                    <button class="btn btn-primary" ng-click="homeAppService.homePage()"
+                        class="ui-button large primary-color jstest-return-button">Home</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- main-panel2 -->
+<div class="main-panel" ng-show="meetingService.showErrorPage">
+    <div class="video-area">
+        <div class="returnToRoom">
+            <div class="thank-you-message jstest-message">
+                <h5 class="body">Presenter not present the room</h5>
+            </div>
+            <p>
+                <button class="btn btn-primary" data-ui-sref="login"
+                    class="ui-button large primary-color jstest-return-button">Signup</button>
+                <a class="btn btn-primary" ng-click="homeAppService.homePage()"
+                    class="ui-button large primary-color jstest-return-button">Home</a>
+            </p>
+        </div>
+    </div>
+</div>
