@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
 import {history} from 'react-router';
 import { myInfoLog, myErrorLog } from '../utils/Utility';
 import Client from '../utils/Client';

@@ -22,7 +22,7 @@ configUrl['isDevelopment'] = true;
 configUrl['isChat'] = 'audio-video-file-chat-demo';
 
 //Local Development Server Configuration
-if(window.location.hostname === 'localhost' || window.location.hostname === '192.168.1.111')
+if(window.location.hostname === 'localhost' || window.location.hostname === '192.168.1.109')
 {
   let apiBaseUrl = 'https://local-webrtc.careconnectclinic.com';
   let streamBaseUrl = 'https://dev-manipal.careconnectclinic.com';

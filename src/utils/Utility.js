@@ -7,7 +7,7 @@
 
 
 import { isDevelopment } from './URL';
-import {encode} from 'base-64';
+
 // import store from 'store';  
 // import {logout} from '../actions/UserAction';
 // import _ from 'lodash';
@@ -31,7 +31,7 @@ export function myLog(...messgae) {
 }
 
 export function encryptBase64(data) {
-   return encode(data)
+   //return encode(data)
 }
 
 export const ValidURL =(str) =>{ 
